@@ -10,10 +10,37 @@
                 <h1 class="h2 fw-bold text-primary animate__animated animate__fadeInLeft">
                     <i class="fas fa-calendar-alt me-2"></i>Calendario de Eventos
                 </h1>
-                <button type="button" class="btn btn-primary animate__animated animate__fadeInRight" 
-                        data-bs-toggle="modal" data-bs-target="#eventModal" onclick="openCreateModal()">
-                    <i class="fas fa-plus me-2"></i>Nuevo Evento
-                </button>
+                <div class="d-flex gap-2 animate__animated animate__fadeInRight">
+                    <!-- Search -->
+                    <div class="position-relative">
+                        <input type="text" id="searchEvents" class="form-control" placeholder="Buscar eventos..." style="min-width: 200px;">
+                        <i class="fas fa-search position-absolute top-50 end-0 translate-middle-y me-3 text-muted"></i>
+                    </div>
+                    <!-- Filter dropdown -->
+                    <div class="dropdown">
+                        <button class="btn btn-outline-primary dropdown-toggle" type="button" id="filterDropdown" data-bs-toggle="dropdown">
+                            <i class="fas fa-filter me-1"></i>Filtrar
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#" data-filter="all"><i class="fas fa-list me-2"></i>Todos los eventos</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" data-filter="#007bff"><i class="fas fa-circle me-2 text-primary"></i>Azul</a></li>
+                            <li><a class="dropdown-item" href="#" data-filter="#28a745"><i class="fas fa-circle me-2 text-success"></i>Verde</a></li>
+                            <li><a class="dropdown-item" href="#" data-filter="#dc3545"><i class="fas fa-circle me-2 text-danger"></i>Rojo</a></li>
+                            <li><a class="dropdown-item" href="#" data-filter="#ffc107"><i class="fas fa-circle me-2 text-warning"></i>Amarillo</a></li>
+                            <li><a class="dropdown-item" href="#" data-filter="#17a2b8"><i class="fas fa-circle me-2 text-info"></i>Cian</a></li>
+                            <li><a class="dropdown-item" href="#" data-filter="#6f42c1"><i class="fas fa-circle me-2" style="color: #6f42c1;"></i>Púrpura</a></li>
+                        </ul>
+                    </div>
+                    <!-- New Event button -->
+                    <button type="button" class="btn btn-primary" onclick="openCreateModal()">
+                        <i class="fas fa-plus me-2"></i>Nuevo Evento
+                    </button>
+                    <!-- Help button -->
+                    <button type="button" class="btn btn-outline-secondary" onclick="$('#helpModal').modal('show')" title="Atajos de teclado">
+                        <i class="fas fa-keyboard"></i>
+                    </button>
+                </div>
             </div>
 
             <!-- Calendar -->
@@ -42,7 +69,7 @@
                     
                     <div class="mb-3">
                         <label for="eventTitle" class="form-label fw-bold">
-                            <i class="fas fa-heading me-1"></i>Título *
+                            <i class="fas fa-heading me-1"></i>Titulo *
                         </label>
                         <input type="text" class="form-control" id="eventTitle" name="Title" required maxlength="200">
                         <div class="invalid-feedback"></div>
@@ -50,7 +77,7 @@
 
                     <div class="mb-3">
                         <label for="eventDescription" class="form-label fw-bold">
-                            <i class="fas fa-align-left me-1"></i>Descripción
+                            <i class="fas fa-align-left me-1"></i>Descripcion
                         </label>
                         <textarea class="form-control" id="eventDescription" name="Description" rows="3" maxlength="1000"></textarea>
                         <div class="invalid-feedback"></div>
@@ -76,7 +103,7 @@
                     <div class="mb-3 form-check">
                         <input type="checkbox" class="form-check-input" id="eventAllDay" name="AllDay">
                         <label class="form-check-label" for="eventAllDay">
-                            <i class="fas fa-sun me-1"></i>Todo el día
+                            <i class="fas fa-sun me-1"></i>Todo el dia
                         </label>
                     </div>
 
@@ -113,16 +140,106 @@
     </div>
 </div>
 
+<!-- Help Modal -->
+<div class="modal fade" id="helpModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-keyboard me-2"></i>Atajos de Teclado y Ayuda
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="fw-bold text-primary mb-3">
+                            <i class="fas fa-keyboard me-2"></i>Navegación del Calendario
+                        </h6>
+                        <ul class="list-unstyled">
+                            <li class="mb-2"><kbd>T</kbd> - Ir a hoy</li>
+                            <li class="mb-2"><kbd>M</kbd> - Vista mensual</li>
+                            <li class="mb-2"><kbd>W</kbd> - Vista semanal</li>
+                            <li class="mb-2"><kbd>D</kbd> - Vista diaria</li>
+                            <li class="mb-2"><kbd>L</kbd> - Vista de lista</li>
+                            <li class="mb-2"><kbd>←</kbd> - Anterior</li>
+                            <li class="mb-2"><kbd>→</kbd> - Siguiente</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="fw-bold text-primary mb-3">
+                            <i class="fas fa-tools me-2"></i>Gestión de Eventos
+                        </h6>
+                        <ul class="list-unstyled">
+                            <li class="mb-2"><kbd>Ctrl</kbd> + <kbd>N</kbd> - Nuevo evento</li>
+                            <li class="mb-2"><kbd>/</kbd> - Buscar eventos</li>
+                            <li class="mb-2"><kbd>Esc</kbd> - Cerrar modal/limpiar búsqueda</li>
+                            <li class="mb-2"><strong>Arrastrar:</strong> Mover evento</li>
+                            <li class="mb-2"><strong>Redimensionar:</strong> Cambiar duración</li>
+                            <li class="mb-2"><strong>Click:</strong> Ver/editar evento</li>
+                        </ul>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-12">
+                        <h6 class="fw-bold text-primary mb-3">
+                            <i class="fas fa-lightbulb me-2"></i>Funcionalidades Avanzadas
+                        </h6>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="text-center mb-3">
+                                    <i class="fas fa-search fa-2x text-info mb-2"></i>
+                                    <h6>Búsqueda</h6>
+                                    <small class="text-muted">Busca por título o descripción en tiempo real</small>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="text-center mb-3">
+                                    <i class="fas fa-filter fa-2x text-warning mb-2"></i>
+                                    <h6>Filtros</h6>
+                                    <small class="text-muted">Filtra eventos por color/categoría</small>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="text-center mb-3">
+                                    <i class="fas fa-bell fa-2x text-success mb-2"></i>
+                                    <h6>Notificaciones</h6>
+                                    <small class="text-muted">Recordatorios 15 minutos antes</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i>
+                    <strong>Tip:</strong> Los eventos se guardan en la sesión del navegador. Para datos persistentes, 
+                    configura una base de datos en el backend.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+                    <i class="fas fa-check me-1"></i>Entendido
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section scripts {
 <script>
 $(document).ready(function() {
     initializeCalendar();
     initializeEventModal();
     initializeColorPicker();
+    initializeSearch();
+    initializeFilters();
 });
 
 let calendar;
 let isEditMode = false;
+let allEvents = []; // Cache for filtering and searching
+let currentFilter = 'all';
 
 function initializeCalendar() {
     const calendarEl = document.getElementById('calendar');
@@ -145,14 +262,12 @@ function initializeCalendar() {
         height: 'auto',
         selectable: true,
         editable: true,
-        dayMaxEvents: true,
-        events: {
-            url: window.App.urls.getEvents,
-            method: 'GET',
-            failure: function() {
-                showToast('Error al cargar los eventos', 'danger');
-            }
+        dayMaxEvents: 3, // Show max 3 events, then "+X more"
+        moreLinkClick: 'popover',
+        moreLinkText: function(num) {
+            return '+' + num + ' más';
         },
+        events: [],
         select: function(info) {
             openCreateModal(info.start, info.end, info.allDay);
         },
@@ -165,16 +280,38 @@ function initializeCalendar() {
         eventResize: function(info) {
             updateEventPosition(info.event);
         },
-        loading: function(bool) {
-            if (bool) {
-                showLoading();
-            } else {
-                hideLoading();
+        // Custom rendering for events with counters
+        eventDidMount: function(info) {
+            // Add tooltip with full event details
+            $(info.el).tooltip({
+                title: `${info.event.title}${info.event.extendedProps.description ? '\n' + info.event.extendedProps.description : ''}`,
+                placement: 'top',
+                trigger: 'hover'
+            });
+            
+            // Add custom styling for different event types
+            if (info.event.allDay) {
+                $(info.el).addClass('fc-event-allday-custom');
+            }
+        },
+        // Enhanced day cell rendering
+        dayCellDidMount: function(info) {
+            const dayEvents = allEvents.filter(event => {
+                const eventDate = new Date(event.start).toDateString();
+                const dayDate = info.date.toDateString();
+                return eventDate === dayDate;
+            });
+            
+            // Add visual indicator for days with many events
+            if (dayEvents.length > 3) {
+                $(info.el).addClass('fc-day-many-events');
+                $(info.el).append(`<div class="day-event-counter" title="${dayEvents.length} eventos">${dayEvents.length}</div>`);
             }
         }
     });
 
     calendar.render();
+    refreshCalendar();
 }
 
 function initializeEventModal() {
@@ -212,6 +349,75 @@ function initializeColorPicker() {
     });
 }
 
+function initializeSearch() {
+    let searchTimeout;
+    
+    $('#searchEvents').on('input', function() {
+        clearTimeout(searchTimeout);
+        const searchTerm = $(this).val().toLowerCase();
+        
+        searchTimeout = setTimeout(function() {
+            filterEvents(searchTerm, currentFilter);
+        }, 300);
+    });
+    
+    // Clear search on escape
+    $('#searchEvents').on('keydown', function(e) {
+        if (e.key === 'Escape') {
+            $(this).val('');
+            filterEvents('', currentFilter);
+        }
+    });
+}
+
+function initializeFilters() {
+    $('.dropdown-item[data-filter]').on('click', function(e) {
+        e.preventDefault();
+        const filter = $(this).data('filter');
+        const searchTerm = $('#searchEvents').val().toLowerCase();
+        
+        currentFilter = filter;
+        filterEvents(searchTerm, filter);
+        
+        // Update button text
+        const filterText = filter === 'all' ? 'Todos los eventos' : 'Por color';
+        $('#filterDropdown').html(`<i class="fas fa-filter me-1"></i>${filterText}`);
+        
+        // Update active state
+        $('.dropdown-item[data-filter]').removeClass('active');
+        $(this).addClass('active');
+    });
+}
+
+function filterEvents(searchTerm = '', colorFilter = 'all') {
+    const filteredEvents = allEvents.filter(event => {
+        const matchesSearch = !searchTerm || 
+            event.title.toLowerCase().includes(searchTerm) ||
+            (event.description && event.description.toLowerCase().includes(searchTerm));
+        
+        const matchesColor = colorFilter === 'all' || 
+            event.backgroundColor === colorFilter ||
+            event.borderColor === colorFilter;
+        
+        return matchesSearch && matchesColor;
+    });
+    
+    // Remove all existing sources then add filtered events as static source
+    calendar.getEventSources().forEach(function(s) { s.remove(); });
+    calendar.addEventSource(filteredEvents);
+    
+    // Show results count
+    if (searchTerm || colorFilter !== 'all') {
+        showToast(`Mostrando ${filteredEvents.length} de ${allEvents.length} eventos`, 'info');
+    }
+}
+
+function updateEventCounters() {
+    // Remove existing counters
+    $('.day-event-counter').remove();
+    $('.fc-day-many-events').removeClass('fc-day-many-events');
+}
+
 function openCreateModal(start = null, end = null, allDay = false) {
     isEditMode = false;
     $('#eventModalTitle').html('<i class="fas fa-calendar-plus me-2"></i>Nuevo Evento');
@@ -233,6 +439,7 @@ function openCreateModal(start = null, end = null, allDay = false) {
         }
         
         $('#eventAllDay').prop('checked', allDay);
+        $('#eventEnd').prop('disabled', allDay);
     } else {
         // Set default to current time
         const now = new Date();
@@ -249,6 +456,7 @@ function openCreateModal(start = null, end = null, allDay = false) {
     $('#eventColor').val('#007bff');
     
     clearValidationErrors();
+    $('#eventModal').modal('show');
 }
 
 function openEditModal(eventId) {
@@ -269,6 +477,7 @@ function openEditModal(eventId) {
                 $('#eventStart').val(event.start);
                 $('#eventEnd').val(event.end);
                 $('#eventAllDay').prop('checked', event.allDay);
+                $('#eventEnd').prop('disabled', event.allDay);
                 
                 // Set color
                 const color = event.color || '#007bff';
@@ -292,9 +501,8 @@ function openEditModal(eventId) {
 
 function saveEvent() {
     clearValidationErrors();
-    
+
     const formData = {
-        Id: $('#eventId').val(),
         Title: $('#eventTitle').val(),
         Description: $('#eventDescription').val(),
         Start: $('#eventStart').val(),
@@ -302,10 +510,20 @@ function saveEvent() {
         AllDay: $('#eventAllDay').is(':checked'),
         Color: $('#eventColor').val()
     };
+
+    // Only send Id when editing; sending empty string breaks int model binding on create.
+    if (isEditMode) {
+        formData.Id = parseInt($('#eventId').val(), 10);
+    }
     
-    // Basic validation
+    // Enhanced validation
     if (!formData.Title.trim()) {
         showValidationError('eventTitle', 'El título es requerido');
+        return;
+    }
+    
+    if (formData.Title.trim().length > 200) {
+        showValidationError('eventTitle', 'El título no puede exceder 200 caracteres');
         return;
     }
     
@@ -319,6 +537,11 @@ function saveEvent() {
         return;
     }
     
+    if (formData.Description && formData.Description.length > 1000) {
+        showValidationError('eventDescription', 'La descripción no puede exceder 1000 caracteres');
+        return;
+    }
+    
     showLoading();
     
     const url = isEditMode ? window.App.urls.updateEvent : window.App.urls.createEvent;
@@ -327,7 +550,7 @@ function saveEvent() {
         .done(function(response) {
             if (response.success) {
                 $('#eventModal').modal('hide');
-                calendar.refetchEvents();
+                refreshCalendar();
                 showToast(response.message, 'success');
             } else {
                 if (response.errors) {
@@ -349,25 +572,51 @@ function deleteEvent() {
     const eventId = $('#eventId').val();
     if (!eventId) return;
     
-    confirmDelete(function() {
-        showLoading();
-        
-        $.post(window.App.urls.deleteEvent, { id: eventId })
-            .done(function(response) {
-                if (response.success) {
-                    $('#eventModal').modal('hide');
-                    calendar.refetchEvents();
-                    showToast(response.message, 'success');
-                } else {
-                    showAlert('Error', response.message, 'error');
-                }
-            })
-            .fail(function() {
-                showAlert('Error', 'Error al eliminar el evento', 'error');
-            })
-            .always(function() {
-                hideLoading();
-            });
+    // Custom confirmation instead of native alert
+    Swal.fire({
+        title: '¿Eliminar evento?',
+        text: "Esta acción no se puede deshacer",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#dc3545',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: '<i class="fas fa-trash me-1"></i>Sí, eliminar',
+        cancelButtonText: '<i class="fas fa-times me-1"></i>Cancelar',
+        customClass: {
+            popup: 'animate__animated animate__pulse'
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            showLoading();
+            
+            $.post(window.App.urls.deleteEvent, { id: eventId })
+                .done(function(response) {
+                    if (response.success) {
+                        $('#eventModal').modal('hide');
+                        refreshCalendar();
+                        
+                        // Success animation
+                        Swal.fire({
+                            title: '¡Eliminado!',
+                            text: 'El evento ha sido eliminado exitosamente',
+                            icon: 'success',
+                            timer: 2000,
+                            showConfirmButton: false,
+                            customClass: {
+                                popup: 'animate__animated animate__fadeInDown'
+                            }
+                        });
+                    } else {
+                        showAlert('Error', response.message, 'error');
+                    }
+                })
+                .fail(function() {
+                    showAlert('Error', 'Error al eliminar el evento', 'error');
+                })
+                .always(function() {
+                    hideLoading();
+                });
+        }
     });
 }
 
@@ -381,15 +630,30 @@ function updateEventPosition(event) {
     $.post(window.App.urls.moveEvent, eventData)
         .done(function(response) {
             if (response.success) {
-                showToast('Evento movido exitosamente', 'success');
+                showToast('Evento actualizado exitosamente', 'success');
+                refreshCalendar();
             } else {
                 showAlert('Error', response.message, 'error');
-                calendar.refetchEvents(); // Revert changes
+                refreshCalendar(); // Revert changes
             }
         })
         .fail(function() {
-            showAlert('Error', 'Error al mover el evento', 'error');
-            calendar.refetchEvents(); // Revert changes
+            showAlert('Error', 'Error al actualizar el evento', 'error');
+            refreshCalendar(); // Revert changes
+        });
+}
+
+function refreshCalendar() {
+    // Refresh events and apply current filters
+    $.get(window.App.urls.getEvents)
+        .done(function(data) {
+            allEvents = data;
+            const searchTerm = $('#searchEvents').val().toLowerCase();
+            filterEvents(searchTerm, currentFilter);
+            updateEventCounters();
+        })
+        .fail(function() {
+            showToast('Error al cargar los eventos', 'danger');
         });
 }
 
@@ -397,6 +661,12 @@ function showValidationError(inputId, message) {
     const input = $('#' + inputId);
     input.addClass('is-invalid');
     input.siblings('.invalid-feedback').text(message);
+    
+    // Auto-clear error on input
+    input.one('input', function() {
+        $(this).removeClass('is-invalid');
+        $(this).siblings('.invalid-feedback').text('');
+    });
 }
 
 function clearValidationErrors() {
@@ -404,9 +674,34 @@ function clearValidationErrors() {
     $('.invalid-feedback').text('');
 }
 
-// Initialize modal when shown
+// Keyboard shortcuts
+$(document).on('keydown', function(e) {
+    // Ctrl/Cmd + N for new event
+    if ((e.ctrlKey || e.metaKey) && e.key === 'n') {
+        e.preventDefault();
+        openCreateModal();
+    }
+    
+    // Escape to close modal
+    if (e.key === 'Escape' && $('#eventModal').is(':visible')) {
+        $('#eventModal').modal('hide');
+    }
+});
+
+// Initialize modal focus
 $('#eventModal').on('shown.bs.modal', function() {
     $('#eventTitle').focus();
+});
+
+// Clear search button
+$('#searchEvents').after('<button type="button" class="btn btn-outline-secondary position-absolute top-50 end-0 translate-middle-y me-1 border-0" id="clearSearch" style="background: none; display: none;"><i class="fas fa-times"></i></button>');
+
+$('#searchEvents').on('input', function() {
+    $('#clearSearch').toggle($(this).val().length > 0);
+});
+
+$('#clearSearch').on('click', function() {
+    $('#searchEvents').val('').trigger('input');
 });
 </script>
 }

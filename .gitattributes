@@ -1,2 +1,21 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# Set default behavior for source code files
+*.cs text diff=csharp encoding=utf-8
+*.cshtml text encoding=utf-8
+*.js text encoding=utf-8
+*.css text encoding=utf-8
+*.json text encoding=utf-8
+*.xml text encoding=utf-8
+*.config text encoding=utf-8
+
+# Binary files
+*.dll binary
+*.exe binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
