@@ -25,27 +25,48 @@ Una aplicación web moderna para la gestión de eventos con calendario interacti
 
 ## 📋 Características
 
-### ✅ Gestión de Eventos
-- ✓ Crear eventos con título, descripción, fechas y colores personalizados
-- ✓ Editar eventos existentes
-- ✓ Eliminar eventos con confirmación
-- ✓ Eventos de todo el día
-- ✓ Validación de formularios en cliente y servidor
+### ✅ Gestión Completa de Eventos
+- ✓ **Vista mensual por defecto** - Visualización inicial al cargar la aplicación
+- ✓ **Crear eventos** - Click en día vacío abre modal con formulario completo
+- ✓ **Ver detalles** - Click en evento existente muestra información completa
+- ✓ **Editar eventos** - Modificación de todos los campos desde el detalle
+- ✓ **Eliminar eventos** - Confirmación visual elegante (SweetAlert2)
+- ✓ **Drag & Drop** - Arrastra eventos para cambiar fechas automáticamente
+- ✓ **Resize de eventos** - Redimensiona arrastrando bordes para cambiar duración
+- ✓ **Eventos de todo el día** - Soporte completo para eventos sin horario específico
 
-### ✅ Interfaz de Usuario
-- ✓ Calendario interactivo con múltiples vistas (mes, semana, día, lista)
-- ✓ Arrastrar y soltar eventos para cambiar fechas
-- ✓ Redimensionar eventos para ajustar duración
-- ✓ Interfaz responsive para móviles y escritorio
-- ✓ Animaciones suaves y transiciones
-- ✓ Paleta de colores personalizable para eventos
+### ✅ Vistas y Navegación
+- ✓ **Vista semanal y diaria** - Toggle desde la UI con botones dedicados
+- ✓ **Vista de lista** - Listado cronológico de eventos
+- ✓ **Navegación con teclado** - Atajos para cambiar vistas y navegar
+- ✓ **Botón "Hoy"** - Regreso rápido a la fecha actual
 
-### ✅ Experiencia de Usuario
-- ✓ Notificaciones toast para feedback inmediato
-- ✓ Modales elegantes para formularios
-- ✓ Indicadores de carga durante operaciones
-- ✓ Confirmaciones antes de eliminar
-- ✓ Navegación intuitiva
+### ✅ Funcionalidades Avanzadas de Búsqueda y Filtrado
+- ✓ **Búsqueda de eventos por título/descripción** - Búsqueda en tiempo real
+- ✓ **Filtro por colores/categorías** - Dropdown con opciones de filtrado
+- ✓ **Búsqueda con teclado** - Atajo "/" para enfocar búsqueda
+- ✓ **Limpiar filtros** - Botones para resetear búsqueda y filtros
+
+### ✅ Indicadores Visuales Avanzados
+- ✓ **Contador de eventos múltiples** - Indicador numérico en días con muchos eventos
+- ✓ **"+X más" en días ocupados** - FullCalendar maneja overflow elegantemente
+- ✓ **Tooltips informativos** - Información al pasar mouse sobre eventos
+- ✓ **Animaciones suaves** - Transiciones y efectos visuales
+- ✓ **Highlighting de búsqueda** - Términos de búsqueda resaltados
+
+### ✅ Experiencia de Usuario Premium
+- ✓ **Atajos de teclado completos** - Navegación sin mouse
+- ✓ **Notificaciones de recordatorio** - Alerts 15 minutos antes de eventos
+- ✓ **Validación avanzada** - Validación en tiempo real con mensajes específicos
+- ✓ **Feedback visual inmediato** - Toast notifications y alerts elegantes
+- ✓ **Modal de ayuda** - Guía completa de atajos y funcionalidades
+- ✓ **Diseño responsive** - Optimizado para móviles y tablets
+
+### ✅ Personalización y Colores
+- ✓ **10 colores predefinidos** - Paleta ampliada con categorías
+- ✓ **Categorización por colores** - Sistema de categorías integrado
+- ✓ **Eventos con estilo diferenciado** - Estilos únicos para eventos de todo el día
+- ✓ **Temas graduales** - Gradientes y efectos visuales modernos
 
 ## 🛠️ Instalación y Configuración
 
@@ -53,6 +74,15 @@ Una aplicación web moderna para la gestión de eventos con calendario interacti
 - Visual Studio 2019 o superior
 - .NET Framework 4.8
 - IIS Express (incluido con Visual Studio)
+
+### ⚠️ Configuración de Codificación UTF-8
+El proyecto está configurado para manejar correctamente caracteres especiales (tildes, ñ, etc.):
+
+- **Web.config**: Configurado con `globalization` para UTF-8
+- **Global.asax**: Configuración automática de codificación UTF-8
+- **Filtro Global**: `Utf8ActionFilterAttribute` aplica UTF-8 a todas las respuestas
+- **HTML Meta Tags**: Etiquetas meta correctas para UTF-8
+- **.gitattributes**: Fuerzar codificación UTF-8 en todos los archivos fuente
 
 ### Pasos de Instalación
 
@@ -179,7 +209,23 @@ Editar variables CSS en `_Layout.cshtml`:
 ### Eliminar un Evento
 1. Hacer clic en el evento
 2. Hacer clic en "Eliminar"
-3. Confirmar la eliminación
+3. Confirmar la eliminación en el diálogo elegante
+
+### Búsqueda y Filtrado
+- **Buscar eventos**: Usar la caja de búsqueda en la parte superior
+- **Filtrar por color**: Usar el dropdown "Filtrar" 
+- **Limpiar filtros**: Click en "Todos los eventos" o botón X en búsqueda
+
+### Atajos de Teclado
+- **Ctrl/Cmd + N**: Crear nuevo evento
+- **T**: Ir a hoy
+- **M**: Vista mensual  
+- **W**: Vista semanal
+- **D**: Vista diaria
+- **L**: Vista de lista
+- **←/→**: Navegación anterior/siguiente
+- **/**: Enfocar búsqueda
+- **Esc**: Cerrar modal/limpiar búsqueda
 
 ## 🚀 Características Avanzadas
 
@@ -217,6 +263,23 @@ Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE.md](LICENSE.m
 ## 🆘 Soporte
 
 Si encuentras algún problema o tienes preguntas:
+
+### Problemas Comunes
+
+#### Caracteres especiales (tildes, ñ) no se muestran correctamente
+- ✅ **Solución aplicada**: El proyecto incluye configuración completa UTF-8
+- ✅ Configuración en `Web.config` con `globalization`
+- ✅ Filtro global `Utf8ActionFilterAttribute`
+- ✅ Meta tags HTML correctos
+- ✅ Codificación forzada en respuestas JSON
+
+#### Si persisten problemas de codificación:
+1. Verificar que Visual Studio guarde archivos en UTF-8
+2. Limpiar y reconstruir la solución
+3. Verificar configuración del navegador
+4. Asegurar que IIS Express use UTF-8
+
+### Otras consultas:
 1. Revisar la documentación
 2. Abrir un issue en GitHub
 3. Contactar al equipo de desarrollo

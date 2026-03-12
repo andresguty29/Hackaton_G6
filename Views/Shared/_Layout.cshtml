@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
     <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - Calendar App</title>
     
@@ -9,7 +10,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     
     <!-- FullCalendar CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/main.min.css" rel="stylesheet">
     
     <!-- Animate.css -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
@@ -33,7 +33,6 @@
         .container-fluid {
             background: rgba(255, 255, 255, 0.95);
             min-height: 100vh;
-            backdrop-filter: blur(10px);
             border-radius: 0;
         }
         
@@ -118,31 +117,106 @@
             border: none !important;
             padding: 2px 5px !important;
             font-weight: 500 !important;
+            cursor: pointer !important;
+            transition: all 0.3s ease !important;
+        }
+        
+        .fc-event:hover {
+            transform: translateY(-1px) !important;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2) !important;
         }
         
         .fc-day-today {
             background-color: rgba(0, 123, 255, 0.1) !important;
         }
         
-        /* Loading spinner */
-        .loading-spinner {
-            display: none;
-            text-align: center;
-            padding: 20px;
+        /* Custom styles for events with counters */
+        .fc-day-many-events {
+            position: relative;
+            background: linear-gradient(135deg, rgba(0, 123, 255, 0.1), rgba(108, 92, 231, 0.05)) !important;
         }
         
-        .spinner-border-custom {
-            width: 3rem;
-            height: 3rem;
-            border-width: 0.3em;
-            border-color: var(--primary-color);
-            border-right-color: transparent;
+        .day-event-counter {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            background: #ffc107;
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            box-shadow: 0 2px 6px rgba(255, 193, 7, 0.4);
+            transition: transform 0.3s ease;
         }
         
-        /* Toast customization */
-        .toast {
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        .day-event-counter:hover {
+            transform: scale(1.1);
+            box-shadow: 0 3px 8px rgba(255, 193, 7, 0.6);
+        }
+        
+        .fc-event-allday-custom {
+            background: linear-gradient(135deg, var(--info-color), #20c997) !important;
+            border: 2px solid rgba(255, 255, 255, 0.2) !important;
+        }
+        
+        /* Enhanced More Link */
+        .fc-more-link {
+            background: linear-gradient(45deg, var(--primary-color), #6c5ce7) !important;
+            color: white !important;
+            border-radius: 12px !important;
+            font-weight: 500 !important;
+            box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3) !important;
+        }
+        
+        .fc-more-link:hover {
+            transform: translateY(-1px) !important;
+            box-shadow: 0 4px 12px rgba(0, 123, 255, 0.4) !important;
+        }
+        
+        /* Search and filter styles */
+        .search-highlight {
+            background-color: yellow;
+            padding: 0 2px;
+            border-radius: 2px;
+        }
+        
+        .dropdown-item.active {
+            background: linear-gradient(45deg, var(--primary-color), #6c5ce7) !important;
+            color: white !important;
+        }
+        
+        .fc-popover {
+            border-radius: 12px !important;
+            border: none !important;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15) !important;
+        }
+        
+        .fc-popover-header {
+            background: linear-gradient(45deg, var(--primary-color), #6c5ce7) !important;
+            color: white !important;
+            border-radius: 12px 12px 0 0 !important;
+        }
+        
+        /* Event resizer */
+        .fc-event-resizer {
+            display: block !important;
+            width: 8px !important;
+            height: 8px !important;
+            background: rgba(255, 255, 255, 0.8) !important;
+            border: 1px solid rgba(0, 123, 255, 0.5) !important;
+            border-radius: 50% !important;
+        }
+        
+        .fc-event-resizer:hover {
+            background: white !important;
+            border-color: #007bff !important;
+            transform: scale(1.2) !important;
         }
         
         /* Color picker styles */
@@ -228,8 +302,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     
     <!-- FullCalendar JS -->
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/main.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/locales/es.min.js"></script>
+    <script src="~/Scripts/fullcalendar.min.js"></script>
+    <script src="~/Scripts/fullcalendar-es.min.js"></script>
     
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -295,13 +369,13 @@
 
         window.confirmDelete = function(callback) {
             Swal.fire({
-                title: '¿Estás seguro?',
-                text: "Esta acción no se puede deshacer",
+                title: 'Esta seguro?',
+                text: "Esta accion no se puede deshacer",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: getComputedStyle(document.documentElement).getPropertyValue('--danger-color').trim(),
                 cancelButtonColor: getComputedStyle(document.documentElement).getPropertyValue('--primary-color').trim(),
-                confirmButtonText: 'Sí, eliminar',
+                confirmButtonText: 'Si, eliminar',
                 cancelButtonText: 'Cancelar'
             }).then((result) => {
                 if (result.isConfirmed && callback) {

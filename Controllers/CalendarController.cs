@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Text;
 using System.Web.Mvc;
 using CalendarApp.Models;
 using CalendarApp.Services;
@@ -26,6 +27,10 @@ namespace CalendarApp.Controllers
         {
             try
             {
+                // Ensure UTF-8 encoding for JSON response
+                Response.ContentType = "application/json; charset=utf-8";
+                Response.ContentEncoding = Encoding.UTF8;
+                
                 var events = _eventService.GetAllEvents();
                 
                 if (start.HasValue && end.HasValue)
@@ -58,6 +63,10 @@ namespace CalendarApp.Controllers
         {
             try
             {
+                // Ensure UTF-8 encoding for JSON response
+                Response.ContentType = "application/json; charset=utf-8";
+                Response.ContentEncoding = Encoding.UTF8;
+                
                 if (!ModelState.IsValid)
                 {
                     var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage);
@@ -93,6 +102,10 @@ namespace CalendarApp.Controllers
         {
             try
             {
+                // Ensure UTF-8 encoding for JSON response
+                Response.ContentType = "application/json; charset=utf-8";
+                Response.ContentEncoding = Encoding.UTF8;
+                
                 if (!ModelState.IsValid)
                 {
                     var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage);
@@ -132,6 +145,9 @@ namespace CalendarApp.Controllers
         {
             try
             {
+                // Ensure UTF-8 encoding for JSON response
+                Response.ContentType = "application/json; charset=utf-8";
+                Response.ContentEncoding = Encoding.UTF8;
                 var result = _eventService.DeleteEvent(id);
                 
                 if (result)
@@ -154,6 +170,9 @@ namespace CalendarApp.Controllers
         {
             try
             {
+                // Ensure UTF-8 encoding for JSON response
+                Response.ContentType = "application/json; charset=utf-8";
+                Response.ContentEncoding = Encoding.UTF8;
                 var eventItem = _eventService.GetEvent(id);
                 
                 if (eventItem == null)
@@ -185,6 +204,9 @@ namespace CalendarApp.Controllers
         {
             try
             {
+                // Ensure UTF-8 encoding for JSON response
+                Response.ContentType = "application/json; charset=utf-8";
+                Response.ContentEncoding = Encoding.UTF8;
                 var eventItem = _eventService.GetEvent(id);
                 if (eventItem == null)
                 {
