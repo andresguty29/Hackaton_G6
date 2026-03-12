@@ -1,0 +1,412 @@
+@{
+    ViewBag.Title = "Calendario de Eventos";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h2 fw-bold text-primary animate__animated animate__fadeInLeft">
+                    <i class="fas fa-calendar-alt me-2"></i>Calendario de Eventos
+                </h1>
+                <button type="button" class="btn btn-primary animate__animated animate__fadeInRight" 
+                        data-bs-toggle="modal" data-bs-target="#eventModal" onclick="openCreateModal()">
+                    <i class="fas fa-plus me-2"></i>Nuevo Evento
+                </button>
+            </div>
+
+            <!-- Calendar -->
+            <div class="card animate__animated animate__fadeInUp">
+                <div class="card-body">
+                    <div id="calendar"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Event Modal -->
+<div class="modal fade" id="eventModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="eventModalTitle">
+                    <i class="fas fa-calendar-plus me-2"></i>Nuevo Evento
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="eventForm">
+                <div class="modal-body">
+                    <input type="hidden" id="eventId" name="Id">
+                    
+                    <div class="mb-3">
+                        <label for="eventTitle" class="form-label fw-bold">
+                            <i class="fas fa-heading me-1"></i>Título *
+                        </label>
+                        <input type="text" class="form-control" id="eventTitle" name="Title" required maxlength="200">
+                        <div class="invalid-feedback"></div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="eventDescription" class="form-label fw-bold">
+                            <i class="fas fa-align-left me-1"></i>Descripción
+                        </label>
+                        <textarea class="form-control" id="eventDescription" name="Description" rows="3" maxlength="1000"></textarea>
+                        <div class="invalid-feedback"></div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="eventStart" class="form-label fw-bold">
+                                <i class="fas fa-clock me-1"></i>Fecha y Hora de Inicio *
+                            </label>
+                            <input type="datetime-local" class="form-control" id="eventStart" name="Start" required>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="eventEnd" class="form-label fw-bold">
+                                <i class="fas fa-clock me-1"></i>Fecha y Hora de Fin
+                            </label>
+                            <input type="datetime-local" class="form-control" id="eventEnd" name="End">
+                            <div class="invalid-feedback"></div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="eventAllDay" name="AllDay">
+                        <label class="form-check-label" for="eventAllDay">
+                            <i class="fas fa-sun me-1"></i>Todo el día
+                        </label>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">
+                            <i class="fas fa-palette me-1"></i>Color del Evento
+                        </label>
+                        <input type="hidden" id="eventColor" name="Color" value="#007bff">
+                        <div class="color-picker">
+                            <div class="color-option" data-color="#007bff" style="background-color: #007bff;" title="Azul"></div>
+                            <div class="color-option" data-color="#28a745" style="background-color: #28a745;" title="Verde"></div>
+                            <div class="color-option" data-color="#dc3545" style="background-color: #dc3545;" title="Rojo"></div>
+                            <div class="color-option" data-color="#ffc107" style="background-color: #ffc107;" title="Amarillo"></div>
+                            <div class="color-option" data-color="#17a2b8" style="background-color: #17a2b8;" title="Cian"></div>
+                            <div class="color-option" data-color="#6f42c1" style="background-color: #6f42c1;" title="Púrpura"></div>
+                            <div class="color-option" data-color="#fd7e14" style="background-color: #fd7e14;" title="Naranja"></div>
+                            <div class="color-option" data-color="#20c997" style="background-color: #20c997;" title="Turquesa"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-1"></i>Cancelar
+                    </button>
+                    <button type="button" class="btn btn-danger d-none" id="deleteEventBtn" onclick="deleteEvent()">
+                        <i class="fas fa-trash me-1"></i>Eliminar
+                    </button>
+                    <button type="submit" class="btn btn-primary" id="saveEventBtn">
+                        <i class="fas fa-save me-1"></i>Guardar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+<script>
+$(document).ready(function() {
+    initializeCalendar();
+    initializeEventModal();
+    initializeColorPicker();
+});
+
+let calendar;
+let isEditMode = false;
+
+function initializeCalendar() {
+    const calendarEl = document.getElementById('calendar');
+    
+    calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        locale: 'es',
+        headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+        },
+        buttonText: {
+            today: 'Hoy',
+            month: 'Mes',
+            week: 'Semana',
+            day: 'Día',
+            list: 'Lista'
+        },
+        height: 'auto',
+        selectable: true,
+        editable: true,
+        dayMaxEvents: true,
+        events: {
+            url: window.App.urls.getEvents,
+            method: 'GET',
+            failure: function() {
+                showToast('Error al cargar los eventos', 'danger');
+            }
+        },
+        select: function(info) {
+            openCreateModal(info.start, info.end, info.allDay);
+        },
+        eventClick: function(info) {
+            openEditModal(info.event.id);
+        },
+        eventDrop: function(info) {
+            updateEventPosition(info.event);
+        },
+        eventResize: function(info) {
+            updateEventPosition(info.event);
+        },
+        loading: function(bool) {
+            if (bool) {
+                showLoading();
+            } else {
+                hideLoading();
+            }
+        }
+    });
+
+    calendar.render();
+}
+
+function initializeEventModal() {
+    $('#eventForm').on('submit', function(e) {
+        e.preventDefault();
+        saveEvent();
+    });
+
+    $('#eventAllDay').on('change', function() {
+        const endDateInput = $('#eventEnd');
+        if (this.checked) {
+            endDateInput.prop('disabled', true);
+            endDateInput.val('');
+        } else {
+            endDateInput.prop('disabled', false);
+        }
+    });
+
+    $('#eventStart').on('change', function() {
+        const startDate = new Date(this.value);
+        const endDateInput = $('#eventEnd');
+        
+        if (!endDateInput.val()) {
+            const endDate = new Date(startDate.getTime() + (60 * 60 * 1000)); // +1 hour
+            endDateInput.val(endDate.toISOString().slice(0, 16));
+        }
+    });
+}
+
+function initializeColorPicker() {
+    $('.color-option').on('click', function() {
+        $('.color-option').removeClass('selected');
+        $(this).addClass('selected');
+        $('#eventColor').val($(this).data('color'));
+    });
+}
+
+function openCreateModal(start = null, end = null, allDay = false) {
+    isEditMode = false;
+    $('#eventModalTitle').html('<i class="fas fa-calendar-plus me-2"></i>Nuevo Evento');
+    $('#deleteEventBtn').addClass('d-none');
+    
+    // Reset form
+    $('#eventForm')[0].reset();
+    $('#eventId').val('');
+    
+    // Set default dates
+    if (start) {
+        const startDate = allDay ? 
+            start.toISOString().slice(0, 10) + 'T09:00' : 
+            start.toISOString().slice(0, 16);
+        $('#eventStart').val(startDate);
+        
+        if (end && !allDay) {
+            $('#eventEnd').val(end.toISOString().slice(0, 16));
+        }
+        
+        $('#eventAllDay').prop('checked', allDay);
+    } else {
+        // Set default to current time
+        const now = new Date();
+        const startTime = new Date(now.getTime() + (60 * 60 * 1000)); // +1 hour
+        const endTime = new Date(startTime.getTime() + (60 * 60 * 1000)); // +1 hour
+        
+        $('#eventStart').val(startTime.toISOString().slice(0, 16));
+        $('#eventEnd').val(endTime.toISOString().slice(0, 16));
+    }
+    
+    // Reset color picker
+    $('.color-option').removeClass('selected');
+    $('.color-option[data-color="#007bff"]').addClass('selected');
+    $('#eventColor').val('#007bff');
+    
+    clearValidationErrors();
+}
+
+function openEditModal(eventId) {
+    isEditMode = true;
+    $('#eventModalTitle').html('<i class="fas fa-calendar-edit me-2"></i>Editar Evento');
+    $('#deleteEventBtn').removeClass('d-none');
+    
+    showLoading();
+    
+    $.get(window.App.urls.getEvent, { id: eventId })
+        .done(function(response) {
+            if (response.success) {
+                const event = response.data;
+                
+                $('#eventId').val(event.id);
+                $('#eventTitle').val(event.title);
+                $('#eventDescription').val(event.description);
+                $('#eventStart').val(event.start);
+                $('#eventEnd').val(event.end);
+                $('#eventAllDay').prop('checked', event.allDay);
+                
+                // Set color
+                const color = event.color || '#007bff';
+                $('#eventColor').val(color);
+                $('.color-option').removeClass('selected');
+                $(`.color-option[data-color="${color}"]`).addClass('selected');
+                
+                $('#eventModal').modal('show');
+                clearValidationErrors();
+            } else {
+                showAlert('Error', response.message, 'error');
+            }
+        })
+        .fail(function() {
+            showAlert('Error', 'Error al cargar el evento', 'error');
+        })
+        .always(function() {
+            hideLoading();
+        });
+}
+
+function saveEvent() {
+    clearValidationErrors();
+    
+    const formData = {
+        Id: $('#eventId').val(),
+        Title: $('#eventTitle').val(),
+        Description: $('#eventDescription').val(),
+        Start: $('#eventStart').val(),
+        End: $('#eventEnd').val(),
+        AllDay: $('#eventAllDay').is(':checked'),
+        Color: $('#eventColor').val()
+    };
+    
+    // Basic validation
+    if (!formData.Title.trim()) {
+        showValidationError('eventTitle', 'El título es requerido');
+        return;
+    }
+    
+    if (!formData.Start) {
+        showValidationError('eventStart', 'La fecha de inicio es requerida');
+        return;
+    }
+    
+    if (formData.End && new Date(formData.Start) >= new Date(formData.End)) {
+        showValidationError('eventEnd', 'La fecha de fin debe ser posterior a la fecha de inicio');
+        return;
+    }
+    
+    showLoading();
+    
+    const url = isEditMode ? window.App.urls.updateEvent : window.App.urls.createEvent;
+    
+    $.post(url, formData)
+        .done(function(response) {
+            if (response.success) {
+                $('#eventModal').modal('hide');
+                calendar.refetchEvents();
+                showToast(response.message, 'success');
+            } else {
+                if (response.errors) {
+                    response.errors.forEach(error => showToast(error, 'danger'));
+                } else {
+                    showAlert('Error', response.message, 'error');
+                }
+            }
+        })
+        .fail(function() {
+            showAlert('Error', 'Error al guardar el evento', 'error');
+        })
+        .always(function() {
+            hideLoading();
+        });
+}
+
+function deleteEvent() {
+    const eventId = $('#eventId').val();
+    if (!eventId) return;
+    
+    confirmDelete(function() {
+        showLoading();
+        
+        $.post(window.App.urls.deleteEvent, { id: eventId })
+            .done(function(response) {
+                if (response.success) {
+                    $('#eventModal').modal('hide');
+                    calendar.refetchEvents();
+                    showToast(response.message, 'success');
+                } else {
+                    showAlert('Error', response.message, 'error');
+                }
+            })
+            .fail(function() {
+                showAlert('Error', 'Error al eliminar el evento', 'error');
+            })
+            .always(function() {
+                hideLoading();
+            });
+    });
+}
+
+function updateEventPosition(event) {
+    const eventData = {
+        id: event.id,
+        start: event.start.toISOString(),
+        end: event.end ? event.end.toISOString() : null
+    };
+    
+    $.post(window.App.urls.moveEvent, eventData)
+        .done(function(response) {
+            if (response.success) {
+                showToast('Evento movido exitosamente', 'success');
+            } else {
+                showAlert('Error', response.message, 'error');
+                calendar.refetchEvents(); // Revert changes
+            }
+        })
+        .fail(function() {
+            showAlert('Error', 'Error al mover el evento', 'error');
+            calendar.refetchEvents(); // Revert changes
+        });
+}
+
+function showValidationError(inputId, message) {
+    const input = $('#' + inputId);
+    input.addClass('is-invalid');
+    input.siblings('.invalid-feedback').text(message);
+}
+
+function clearValidationErrors() {
+    $('.form-control').removeClass('is-invalid');
+    $('.invalid-feedback').text('');
+}
+
+// Initialize modal when shown
+$('#eventModal').on('shown.bs.modal', function() {
+    $('#eventTitle').focus();
+});
+</script>
+}
