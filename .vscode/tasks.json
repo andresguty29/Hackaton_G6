@@ -1,0 +1,25 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Build and Run Calendar App",
+			"type": "shell",
+			"command": "dotnet build CalendarApp.sln && echo 'Build completed. To run the application, open CalendarApp.sln in Visual Studio and press F5, or use IIS Express.'",
+			"isBackground": false,
+			"problemMatcher": [
+				"$msCompile"
+			],
+			"group": "build"
+		},
+		{
+			"label": "Build Calendar App",
+			"type": "shell",
+			"command": "msbuild CalendarApp.sln /p:Configuration=Debug /p:Platform=\"Any CPU\" ; Write-Host 'Build completed. To run: Open CalendarApp.sln in Visual Studio and press F5.'",
+			"isBackground": false,
+			"problemMatcher": [
+				"$msCompile"
+			],
+			"group": "build"
+		}
+	]
+}
